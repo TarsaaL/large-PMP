@@ -5,18 +5,14 @@
 #include "instance.hpp"
 #include "solution_std.hpp"
 #include "solution_cap.hpp"
+#include "TB.hpp"
 
 using namespace std;
 
-class TBPercentage {
-private:
-    shared_ptr<Instance> instance;
-    default_random_engine engine;
+class TBPercentage: public TB {
+
 public:
-    explicit TBPercentage(shared_ptr<Instance> instance, uint_t seed);
-    Solution_std initRandomSolution();
-    Solution_cap initRandomCapSolution();
-    Solution_cap initHighestCapSolution();
+    explicit TBPercentage(shared_ptr<Instance> instance, uint_t seed) : TB(instance, seed){};
     unordered_set<uint_t>* splitLocationsByPercentage(int movingAmount, unordered_set<uint_t> pLocations);
 
     Solution_std run(bool verbose);

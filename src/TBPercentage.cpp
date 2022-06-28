@@ -4,67 +4,6 @@
 
 #include <utility>
 
-TBPercentage::TBPercentage(shared_ptr<Instance> instance, uint_t seed):instance(std::move(instance)) {
-    engine.seed(seed);
-//    cout << "TB heuristic initialized\n";
-//    instance->print();
-}
-
-Solution_std TBPercentage::initRandomSolution() {
-    // Sample p distinct locations
-    unordered_set<uint_t> p_locations;
-    auto p = instance->get_p();
-    auto locations = instance->getLocations();
-
-    uniform_int_distribution<uint_t> distribution (0, locations.size() - 1);
-    while (p_locations.size() < p) {
-        auto loc_id = distribution(engine);
-        auto loc = locations[loc_id];
-        p_locations.insert(loc);
-    }
-    Solution_std sol(instance, p_locations);
-    return sol;
-}
-
-Solution_cap TBPercentage::initRandomCapSolution() {
-    // Sample p distinct locations
-    unordered_set<uint_t> p_locations;
-    auto p = instance->get_p();
-    auto locations = instance->getLocations();
-
-    uniform_int_distribution<uint_t> distribution (0, locations.size() - 1);
-    while (p_locations.size() < p) {
-        auto loc_id = distribution(engine);
-        auto loc = locations[loc_id];
-        p_locations.insert(loc);
-    }
-    Solution_cap sol(instance, p_locations);
-    return sol;
-}
-
-Solution_cap TBPercentage::initHighestCapSolution() {
-    unordered_set<uint_t> p_locations;
-    auto p = instance->get_p();
-
-    auto locations = instance->getLocations();
-
-    vector<pair<uint_t, uint_t>> sorted_locations;
-    for (auto loc:locations) {
-        auto cap = instance->getLocCapacity(loc);
-        sorted_locations.emplace_back(cap, loc);
-    }
-    sort(sorted_locations.begin(), sorted_locations.end());
-    reverse(sorted_locations.begin(), sorted_locations.end());
-
-    for (int i = 0; i < p; i++) {
-        p_locations.insert(sorted_locations[i].second);
-    }
-    Solution_cap sol(instance, p_locations);
-
-    return sol;
-}
-
-
 /**
  * @brief Splits the p locations into a stationary and a mobile part
  * 
@@ -94,7 +33,6 @@ unordered_set<uint_t>* TBPercentage::splitLocationsByPercentage(int movingAmount
 
 Solution_std TBPercentage::run(bool verbose) {
     checkClock();
-
     auto sol_best = initRandomSolution();
     auto p_locations = sol_best.get_pLocations();
     auto locations = instance->getLocations();

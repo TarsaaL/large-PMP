@@ -9,9 +9,10 @@
 using namespace std;
 
 class TB {
-private:
+protected:
     shared_ptr<Instance> instance;
     default_random_engine engine;
+    int seed;
 public:
     explicit TB(shared_ptr<Instance> instance, uint_t seed);
     Solution_std initRandomSolution();
